@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //
 // cg_main.c -- initialization and primary entry point for cgame
+#include <time.h>
+
 #include "cg_local.h"
 
 #ifdef MISSIONPACK
@@ -457,8 +459,15 @@ void QDECL Com_Printf( const char *msg, ... ) {
 	va_list		argptr;
 	char		text[1024];
 
-	va_start (argptr, msg);
-	Q_vsnprintf (text, sizeof(text), msg, argptr);
+	//char timestamped_msg[1088];
+	time_t t = time(NULL);
+	struct tm *tm = localtime(&t);
+	char timestamp[64];
+	strftime(timestamp, sizeof(timestamp), "%Y-%m-%dT%X.000000: ", tm);
+	//sprintf(timestamped_msg, "%s: %s", timestamp, msg)
+
+	va_start (argptr, timestamp, msg);
+	Q_vsnprintf (text, sizeof(text), timestamp, msg, argptr);
 	va_end (argptr);
 
 	trap_Print( text );
